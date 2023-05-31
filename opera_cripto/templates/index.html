@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block titulo %} Movimientos {% endblock %}
+
+{% block resumen %}
+
+<style>  
+.tabla-index, th, td {
+  border: 1px solid rgb(255, 255, 255);
+  border-collapse: collapse;
+}
+th, td {
+  background-color: #96D4D4;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+    }
+
+
+#space_monedero {
+    margin-top: 150px;
+}
+
+
+
+</style>
+
+
+
+<div>
+    <h1 style="font-family:cooper black; text-align: center;" title="Inicio"><img src="https://media.tenor.com/GL0QQeZQiA8AAAAM/bitcoin-bitcoin-coaster.gif" alt="coin" style="width:78px;height:78px;"> Movimientos </h1>
+</div>
+
+<div>
+    {% if error != "" %}
+    <p style="color: red; text-align: center;"> {{error}} </p>
+    {% else %}
+        {% if datos | length > 0 %}
+            <table class= "tabla-index">
+                <tr>
+                    <th style="text-align:center;"><b>Fecha</b></th>
+                    <th style="text-align:center;"><b>Hora</b></th>
+                    <th style="text-align:center;"><b>From</b></th>
+                    <th style="text-align:center;"><b>Q</b></th>
+                    <th style="text-align:center;"><b>To</b></th>
+                    <th style="text-align:center;"><b>Q</b></th>
+                    <th style="text-align:center;"><b>P.U.</b></th>
+                </tr>
+            {% for registro in datos %}
+                <tr>
+                    <td style="text-align:center;">{{ registro['Fecha'] }}</td>
+                    <td style="text-align:center;">{{ registro['Hora'] }}</td>
+                    <td style="text-align:center;">{{ registro['Moneda_from'] }}</td>
+                    <td style="text-align:center;" class= "valores">{{ registro['Cantidad_from'] }}</td>
+                    <td style="text-align:center;">{{ registro['Moneda_to'] }}</td>
+                    <td style="text-align:center;" class="valores">{{ registro['Cantidad_to'] }}</td>
+                    <td style="text-align:center;" class="valores">{{registro['precio_unitario_to'] }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <p style="text-align: center;"><mark background-color: yellow;>Sin movimientos.</mark></p>
+            <p style="text-align: center;"><mark background-color: yellow;>Por favor, realice su primera 
+                <a href="/purchase"> compra <i class="fa fa-plus" aria-hidden="true"></i></a>.</mark></p>
+        </div>
+        {% endif %}
+        
+      
+        
+        <div id="space_monedero">
+        <hgroup>
+            <h2>Monedero: </h2>
+            <h3>¿Cuánto tienes de cada criptomoneda? <a href="#section1" style="color: black;">[1]</a></h3>
+        </hgroup>
+                {% for moneda, cantidad in monedero.items() %} <!-- ¿Tendria que poner un <li> para cada moneda?-->
+                    {% if cantidad == None %}
+                        <p> <img src="static/images/{{moneda}}.png" alt="icono criptomoneda"  width="30px" height="30px"> {{moneda}} = 0 </p>
+                    {% elif cantidad > 0 %}
+                        <li> <img src="static/images/{{moneda}}.png" alt="icono criptomoneda" title="{{cantidad}}" width="30px" height="30px"> {{moneda}} = {{ "{:,.4f}".format(cantidad) }}</li>
+                    {% endif %}
+                {% endfor %}
+        </div>
+        <br>
+        <p id="section1"> <small>[1] Las cantidades se muestran redondeadas en el cuarto decimal. 
+            Si coloca el cursor encima del icono de la criptomoneda de interés se le mostrará la cantidad sin redondear.</small> </p>
+    {% endif %}
+{% endblock %}

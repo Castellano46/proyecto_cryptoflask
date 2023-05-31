@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.not-active { 
+    pointer-events: none; 
+    cursor: default; 
+    } 
+</style>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title> Pedro APP Cryptos - {% block titulo %}{% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/pico.css">
+        <link rel="stylesheet" href="/static/css/styles.css">
+    </head>
+    <header data-theme="dark">
+        <li style="font-family:unispace; text-align:center;"><strong style="color:rgb(185, 10, 92);">My Crypt0 - APP</strong></li>
+            <nav>
+                
+                <ul>
+                    {% if title == "Inicio" %}
+                    <li><a href="/" role="button" class="not-active" style="color:red">Inicio</a></li>
+                    {% else %}
+                    <li><a href="/" role="button">Inicio</a></li>
+                    {% endif %}
+
+                    {% if title == "Purchase" %}
+                    <li><a href="/purchase" role="button" class="not-active" style="color:red">Compra</a></li>
+                    {% else %}
+                    <li><a href="/purchase" role="button" >Compra</a></li>
+                    {% endif %}
+
+                    {% if title == "Status" %}
+                    <li><a href="/status" role="button" class="not-active" style="color:red">Status</a></li>   
+                    {% else %}
+                    <li><a href="/status" role="button">Status</a></li>   
+                    {% endif %}
+                </ul>
+                
+        </nav>
+    </header>
+    <body>
+      
+
+        <section class="container">
+            {% block resumen %}
+            
+            {% endblock %} 
+        </section>
+
+        <footer data-theme="dark">
+            <div class="container">
+                <p><small><i> &copy; 2023 - Todos los derechos reservados; Pedro Liébana</i></small></p>
+            </div>
+        </footer>
+    </body>
+    </html>

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block titulo %} Compras {% endblock %}
+
+{% block resumen %}
+
+<style>
+    .tabla_form {
+        font-family: arial, sans-serif;
+        width: 100%;
+        }
+    td {
+        vertical-align: center ;
+        border: none;
+    }
+    #etiqueta {
+        font-size:larger;
+        vertical-align: text-top;
+    }
+    #btn_limpiar {
+        background-color: rgb(182, 14, 14);
+    }
+
+</style>
+
+<h1 style="font-family:cooper black; text-align: center;"><img src="https://www.institutionalinvestor.com/media/AMG/II/articles/2018/5/24/20180524SegalCryptoResearch.gif" alt="coin" style="width:78px;height:78px;"> Compra - Venta - Tradeo </h1>
+    <form action="/purchase" method="POST">
+        {{ form.hidden_tag() }}
+
+        <div>
+        <table class="tabla_form">
+            <tr>
+                <td> {{form.Moneda_from.label}}  </td>
+                <td>  {{ form.Moneda_from }} </td> 
+                <td>  </td>
+                <td> {{form.Moneda_to.label}}   </td>
+                <td>  {{ form.Moneda_to }} </td> 
+            </tr>
+            
+            <tr>
+                <td> {{form.Cantidad_from.label}}  </td>
+                {% if vacio =='yes' %} 
+                    <td> {{form.Cantidad_from(placeholder='Ingrese una cantidad válida')}} </td>
+                {% else %}
+                        <td> {{ form.Cantidad_from(readonly= "True") }} </td>
+                {% endif %}
+                
+                <td> <button name="submit"  type="submit" value="Calcular" title="Calcular"> <i class="fa fa-calculator" aria-hidden="true"> </i> </button> </td>
+                
+                <td id="etiqueta"> {{form.Cantidad_to.label}}  </td>
+                {% if vacio == 'yes' %}
+                    <td  style="text-align: center;">  ________________________________ </td>
+                {% else %}
+                    <td> {{ form.Cantidad_to(value =  "{:.6f}".format(q_to) ) }} </td>
+                {% endif %}
+            </tr>
+            
+            <tr>
+                <td colspan="3">  </td>
+                <td> {{form.precio_unitario_to.label}}  </td>
+                {% if vacio == 'yes' %}
+                    <td style="text-align: center;">  ________________________________  </td>
+                {% else %}
+                    <td> {{ form.precio_unitario_to(value =  "{:.6f}".format(precioUnitario) ) }} </td>
+                {% endif %}
+            </tr>
+
+            <tr>
+                <td colspan="3">  </td>
+                <td style="vertical-align:top">  <a href="/purchase" role="button" title="Limpiar formulario" id="btn_limpiar"> <i class="fa fa-times" aria-hidden="true"></i>
+                </a> </td>
+                <td> <button name="submit"  type="submit" value="Grabar" title="Efectuar compra"> <i class="fa fa-check" aria-hidden="true"></i> </button> </td>
+            </tr>
+        </table>
+        </div>
+
+        <div>
+        {% if error %}
+            <p class="error"> <mark> <strong>Error:</strong>  {{ error }} </mark></p>
+        {% endif %}
+        </div>
+
+        <p hidden>La fecha y hora de la compra es: {{form.Fecha(value=fecha_compra) }} a las {{form.Hora(value=hora_compra)}}</p>
+    </form>
+
+    <div>
+        {% if monedero == 'vacio' %}
+        <p> <mark background-color: yellow;>  <strong>Instrucciones: Leer detenidamente</strong> </mark> </p>
+        <ol>
+            <li> <strong>Primera compra:</strong> Use Euros (EUR) para obtener Bitcoins (BTC). </li>
+            <li> Con el botón <strong>calcular</strong> <i class="fa fa-calculator" aria-hidden="true"> </i> se le informará del precio y cantidad de monedas que puede conseguir. </li>
+            <li> Para borrar el formulario puede usar el botón <strong>limpiar</strong> <i class="fa fa-times" aria-hidden="true"></i>.</li>
+            <li> Para validar la compra pulse <strong>aceptar</strong> <i class="fa fa-check" aria-hidden="true"></i>. El movimiento quedará registrado.</li>
+            <li> <strong>Siguientes compras:</strong> Una vez tenga BTC podrá adquirir otras criptomonedas disponibles en la lista desplegable (To). </li>
+        </ol> 
+        {% else %}
+        <hgroup>
+            <h2>Monedero: </h2>
+            <h3>¿Cuánto tienes de cada criptomoneda? <a href="#section2" style="color: black;">[2]</a> </h3>
+        </hgroup>
+            {% for moneda, cantidad in monedero.items() %}
+                {% if cantidad == None %}
+                    
+                {% elif cantidad > 0  %}
+                    <li> <img src="static/images/{{moneda}}.png" alt="icono criptomoneda"  width="30px" height="30px"> {{moneda}} = {{cantidad}}</li>
+                {% endif %}
+            {% endfor %}
+            <br>
+            <p id="section2"> <small>[2] Para facilitar la compra y venta de monedas las cantidades se muestran sin redondear.</small> </p>
+        {% endif %}
+    </div>
+    
+    
+{% endblock %}

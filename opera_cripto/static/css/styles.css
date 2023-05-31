@@ -1,0 +1,36 @@
+body > header, body > main, body > footer {
+    padding: 16px;
+}
+
+
+header {
+    display: grid;
+    grid-template-columns: auto 25%;
+}
+
+
+header{
+    background-color: var(--primary);
+    color: var(--primary-inverse);
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+footer{
+    background-color: var(--secondary);
+    color: var(--secondary-inverse);
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+body{
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    margin: 0;
+}
+
+
+section.container {
+    min-height: calc(100wh - 90px);
+}
