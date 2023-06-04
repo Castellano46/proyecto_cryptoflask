@@ -1,11 +1,21 @@
 # Aplicación Web dirigida a la Inversión y Tradeo de Criptomonedas
 
 Programa hecho en python utilizando el framework flask.
-Desarrollado por Pedro Liébana Castellano para el Bootcamp, "Aprende a programar desde 0"
+Desarrollado por Pedro Liébana Castellano para el Bootcamp, "Aprende a programar desde 0".
+
+Con este programa podremos simular inversiones con diversas criptomonedas y visualizar el grado de beneficio o pérdida obtenido.
 
 # PRIMEROS PASOS
 
-Al descargar el archivo .zip desde github y abierto con Visual Studio Code, nos dirigimos hacia la pestaña "Terminal" para seleccionar "Nuevo terminal". Una vez abierto un nuevo terminal procederemos siguiendo estos pasos:
+- Descargar el archivo .zip desde github.
+- Abrir el archivo con Visual Studio Code. 
+- Posteriormente accederemos a nuestro navegador web para ingresar la siguiente url: https://docs.coinapi.io/ y de esta manera, obtener una APIKEY que nos llegará a nuestro correo electrónico.
+- La APIKEY obtenida la copiaremos y pegaremos dentro de las comillas ("") de APIKEY="", en la sección llamada config.py.
+- Dentro de la carpeta /data de nuestro proyecto crearemos una base de datos en DB Browser con los datos mostrados en data/create_Movimientos.sql. Llamaremos a esta base de datos 
+```
+cripto.sqlite
+```
+Cuando hayamos completado estos pasos procederemos a abrir un nuevo terminal en la pestaña "Terminal" de Visual Studio Code y seleccionando "Nuevo Terminal" y continuamos con la instalación.
 
 # Instalación
 
@@ -14,7 +24,7 @@ Al descargar el archivo .zip desde github y abierto con Visual Studio Code, nos 
 py -m venv venv
 ```
 
-- Posteriormente procedemos a activar nuestro entorno
+- Seguidamente activaremos nuestro entorno
 ```
 .\venv\Scripts\activate
 ```
@@ -25,7 +35,7 @@ pip install -r requirements.txt
 ```
 La libreria utilizada en flask https://flask.palletsprojects.com/en/2.2.x/
 
-# Ejecucion del programa
+# Ejecución del programa
 
 - Inicializar el servidor de flask
 - En mac: 
@@ -37,7 +47,7 @@ export FLASK_APP=main.py
 set FLASK_APP=main.py
 ```
 
-# Otra opción de ejecucion
+# Otra opción de ejecución
 - Instalar
 ```
 pip install python-dotenv

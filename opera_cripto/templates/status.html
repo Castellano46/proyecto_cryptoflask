@@ -14,28 +14,47 @@
     .fa-arrow-up {
         color: green;
     }
-  
+
 </style>
 
 <h1 style="font-family:cooper black; text-align: center;"><img src="https://64.media.tumblr.com/abf60bc78bb21841f41e78cb2104dc9e/tumblr_oo2dle8hRU1vbcnq8o1_500.gif" alt="coin" style="width:78px;height:78px;"> Estado de la inversión </h1>
+
     <div>
-        <p class="status"> <strong> Invertido: </strong>  {{ "{:,.2f}".format(invertido) }}€ </p>
-        {% if actual > invertido %}
-            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(actual) }}€
+        <p class="status"> <strong> Invertido: </strong> {{ "{:,.2f}".format(invertido) }}€ </p>
+
+        <p class="status"> <strong> Recuperado: </strong>  {{ "{:,.2f}".format(recuperado) }}€ </p>
+
+
+        {% if resultado_c == "nada" %}
+            <p class="status"> <strong> Valor de compra: </strong>  {{ "{:,.2f}".format(valor_compra) }}€</p>
+        {% elif resultado_c == "beneficio" %}
+            <p class="status"> <strong> Valor de compra: </strong>  {{ "{:,.2f}".format(valor_compra) }}€
             <i class="fa fa-arrow-up" aria-hidden="true"></i> </p>
-        {% elif actual == invertido %}
-            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(actual) }}€</p>
         {% else %}
-            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(actual) }}€
+            <p class="status"> <strong> Valor de compra: </strong>  {{ "{:,.2f}".format(valor_compra) }}€
+            <i class="fa fa-arrow-down" aria-hidden="true"></i> </p> 
+        {% endif %}
+
+        {% if resultado_a == "nada" %}
+            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(valor_act) }}€</p>
+        {% elif resultado_a == "beneficio" %}
+            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(valor_act) }}€
+            <i class="fa fa-arrow-up" aria-hidden="true"></i> </p>
+        {% else %}
+            <p class="status"> <strong> Valor actual: </strong>  {{ "{:,.2f}".format(valor_act) }}€
+            <i class="fa fa-arrow-down" aria-hidden="true"></i> </p> 
+        {% endif %}
+
+        {% if total == "nada" %}
+            <p class="status"> <strong> Beneficio/Pérdida total: </strong>  {{ "{:,.2f}".format(margen) }}€</p>
+        {% elif total == "beneficio" %}
+            <p class="status"> <strong> Beneficio/Pérdida total: </strong>  {{ "{:,.2f}".format(margen) }}€
+            <i class="fa fa-arrow-up" aria-hidden="true"></i> </p>
+        {% else %}
+            <p class="status"> <strong> Beneficio/Pérdida total: </strong>  {{ "{:,.2f}".format(margen) }}€
             <i class="fa fa-arrow-down" aria-hidden="true"></i> </p> 
         {% endif %}
     </div>
+<a href="/" role="button" style="float:right;">Inicio</a>
 
-    {% if error_conexion %}
-    <p> <mark> <strong>Error:</strong> {{ error_conexion }} </mark> </p>
-    {% endif %}  
-
-<br><br>
-    <div> <a href="/" role="button" title="Volver al inicio" style="float: right;"> Volver </a> </div>
-<br><br>
 {% endblock %}

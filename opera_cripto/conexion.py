@@ -6,4 +6,3 @@ class Conexion:
         self.conn = sqlite3.connect(ORIGIN_DATA)
         self.cur = self.conn.cursor()
         self.res = self.cur.execute(query, params)
-                                

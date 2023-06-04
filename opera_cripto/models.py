@@ -1,14 +1,11 @@
 from opera_cripto.conexion import Conexion
-from flask import Flask, render_template, request, url_for, redirect
-import datetime
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DateField, StringField, FloatField, SubmitField, SelectField, ValidationError, TimeField, validators
-from wtforms.validators import DataRequired, Length, NumberRange, InputRequired
-import time
+from wtforms import StringField, FloatField, SubmitField, SelectField
+from wtforms.validators import DataRequired, InputRequired
 import requests 
 import sqlite3
 from opera_cripto import ORIGIN_DATA
-
+from config import APIKEY
 
 class MovementForm(FlaskForm):
     lista_monedas = ['EUR','BTC','ETH','USDT','BNB','XRP','ADA','SOL','DOT','MATIC']
@@ -19,12 +16,9 @@ class MovementForm(FlaskForm):
     precio_unitario_to = FloatField('P.U.', render_kw={'readonly': True})
     Fecha = StringField('Fecha', render_kw={'readonly': True}) 
     Hora = StringField('Hora', render_kw={'readonly': True}) 
-    
     submit = SubmitField('boton')
 
-
 def consulta(query, params=()):
-    ## función 1: establecer conexión con sqlite3
     conn = sqlite3.connect(ORIGIN_DATA)
     c = conn.cursor()
     c.execute(query, params)
@@ -32,7 +26,6 @@ def consulta(query, params=()):
     filas = c.fetchall()
     conn.close
        
-    ## función 2: dar formato a la consulta como lista de diccionarios
     if len(filas) == 0:
         return filas
 
@@ -50,7 +43,6 @@ def consulta(query, params=()):
 
     return listaDeDiccionarios 
 
-#  ?¿
 def peticionAPI(specific_url):
     response = requests.get(specific_url)
     if response.status_code == 200:
@@ -59,15 +51,14 @@ def peticionAPI(specific_url):
     else: 
         raise Exception("Problema de consulta tipo {}".format(response.status_code)) 
     
-    '''
-    url = 'https://rest.coinapi.io/v1/exchangerate/{crypto}/{convert}?apikey={APIKEY}'.format(crypto, convert, APIKEY)
-    data = requests.get(url)
-        if data.status_code == 200:
-            data = data.json()
-            for e in data['data']:
-                print(e['rate'])
-    '''    
-
+def valorCrypto(crypto):
+    url = f'https://rest.coinapi.io/v1/exchangerate/{crypto}/EUR'
+    headers = {'X-CoinAPI-Key' : APIKEY}
+    response = requests.get(url, headers=headers)
+    r = response.json()
+    rate = r["rate"]
+    return rate
+    
 def calc_monedero():
     lista_monedas = ['BTC','ETH','USDT','BNB','XRP','ADA','SOL','DOT','MATIC']
     monedero = {} 
@@ -81,67 +72,70 @@ def calc_monedero():
 def validarConversion(amount, crypto, convert):
     monedero = calc_monedero()
     error = None
+    
+    '''
+    if crypto == 'EUR' and convert != 'BTC':
+        error = 'Con EUR sólo puedes comprar BTC.'
+        return error
+    '''
     try:
         if float(amount) <= 0:
             error = 'Cifra no válida. La cantidad debe ser superior a 0.'
             return error
     except:
-        error = 'Cifra no válida. Use el punto para separar decimales.'
+        error = 'Cifra o caracter no válido. Use el punto para separar decimales.'
         return error
-    
+            
     if crypto != 'EUR' and monedero[crypto] < float(amount):
         error = 'Sólo dispone de {:.4f} {} para gastar. Consulte el monedero para ver la cantidad real.'.format(monedero[crypto], crypto)
         return error
-    
+        
     if crypto == convert:
         error = 'Las monedas From y To deben ser diferentes.'
         return error  
-   
-    if crypto != 'BTC' and convert == 'EUR':
-        error = 'Sólo puede comprar EUR con BTC.'
-        return error
 
+def invert():
+    conectarInvertidos = Conexion("SELECT Moneda_from, Cantidad_from  from movimientos")
+    filas = conectarInvertidos.res.fetchall()
+    invertido = 0
+    pun=0
+    for i in filas:
+        if filas[pun][0] == "EUR":
+            invertido += filas[pun][1]
+        pun += 1
+    conectarInvertidos.conn.close()   
+    return invertido
 
+def euros_recuperados():
+    conectarInvertidos = Conexion("SELECT Moneda_to, Cantidad_to  from movimientos")
+    rec = conectarInvertidos.res.fetchall()
+    recuperado = 0
+    pun=0
+    for i in rec:
+        if rec[pun][0] == "EUR":
+            recuperado += rec[pun][1]
+        pun += 1
+    conectarInvertidos.conn.close()   
+    return recuperado
 
-
-
-''' 
-   if crypto == 'EUR' and convert != 'BTC':
-        error = 'Con EUR sólo puedes comprar BTC.'
-        return error
-           
-fecha_actual = datetime.datetime.now() 
-
-fecha = datetime.datetime.strftime(fecha_actual, '%Y-%m-%d')
-hora = datetime.datetime.strftime(fecha_actual, '%H: %M: %S')
-    
-
-def select_all():
-    conectar = Conexion("SELECT * FROM Movimientos")
-
-
-    filas = conectar.res.fetchall()
-    columnas = conectar.res.description
-
-    lista_diccionario=[]
-    
-    for f in filas:
-        diccionario ={}
-        posicion=0
-        for c in columnas:
-            diccionario[c[0]] = f[posicion]
-            posicion +=1
-        lista_diccionario.append(diccionario)
-
-    conectar.con.close()
-
-    return lista_diccionario
-
-def insert(registroForm, Fecha=fecha, Hora=hora):
-    conectarInsert = Conexion("insert into movimientos(Moneda_from, Cantidad_from, Moneda_to) values (?,?,?)", registroForm)
-
-    conectarInsert.con.commit()
-
-    conectarInsert.con.close()
-
-'''
+def valor_actual():
+    conectarInvertidos = Conexion("SELECT Moneda_to, Cantidad_to  from movimientos")
+    crypto_inver = conectarInvertidos.res.fetchall()
+    invertido = 0
+    pun=0
+    for i in crypto_inver:
+        if crypto_inver[pun][0] != "EUR":
+            crypto = crypto_inver[pun][0]
+            crypto_q = float(crypto_inver[pun][1])
+            conver = valorCrypto(crypto)
+            sum = conver * crypto_q
+            invertido += sum
+        else:
+            crypto = crypto_inver[pun][0]
+            crypto_q = float(crypto_inver[pun][1])
+            conver = valorCrypto(crypto)
+            sum = conver * crypto_q
+            invertido -= sum
+        pun += 1
+    conectarInvertidos.conn.close()   
+    return invertido

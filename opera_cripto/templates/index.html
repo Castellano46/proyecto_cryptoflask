@@ -21,12 +21,7 @@ tr:nth-child(even) {
 #space_monedero {
     margin-top: 150px;
 }
-
-
-
 </style>
-
-
 
 <div>
     <h1 style="font-family:cooper black; text-align: center;" title="Inicio"><img src="https://media.tenor.com/GL0QQeZQiA8AAAAM/bitcoin-bitcoin-coaster.gif" alt="coin" style="width:78px;height:78px;"> Movimientos </h1>
@@ -41,10 +36,10 @@ tr:nth-child(even) {
                 <tr>
                     <th style="text-align:center;"><b>Fecha</b></th>
                     <th style="text-align:center;"><b>Hora</b></th>
-                    <th style="text-align:center;"><b>From</b></th>
-                    <th style="text-align:center;"><b>Q</b></th>
-                    <th style="text-align:center;"><b>To</b></th>
-                    <th style="text-align:center;"><b>Q</b></th>
+                    <th style="text-align:center;"><b>Moneda From</b></th>
+                    <th style="text-align:center;"><b>Cantidad From</b></th>
+                    <th style="text-align:center;"><b>Moneda To</b></th>
+                    <th style="text-align:center;"><b>Cantidad To</b></th>
                     <th style="text-align:center;"><b>P.U.</b></th>
                 </tr>
             {% for registro in datos %}
@@ -66,14 +61,12 @@ tr:nth-child(even) {
         </div>
         {% endif %}
         
-      
-        
         <div id="space_monedero">
         <hgroup>
             <h2>Monedero: </h2>
             <h3>¿Cuánto tienes de cada criptomoneda? <a href="#section1" style="color: black;">[1]</a></h3>
         </hgroup>
-                {% for moneda, cantidad in monedero.items() %} <!-- ¿Tendria que poner un <li> para cada moneda?-->
+                {% for moneda, cantidad in monedero.items() %}
                     {% if cantidad == None %}
                         <p> <img src="static/images/{{moneda}}.png" alt="icono criptomoneda"  width="30px" height="30px"> {{moneda}} = 0 </p>
                     {% elif cantidad > 0 %}
@@ -83,6 +76,6 @@ tr:nth-child(even) {
         </div>
         <br>
         <p id="section1"> <small>[1] Las cantidades se muestran redondeadas en el cuarto decimal. 
-            Si coloca el cursor encima del icono de la criptomoneda de interés se le mostrará la cantidad sin redondear.</small> </p>
+            Si coloca el cursor sobre el icono de la criptomoneda de interés, se le mostrará la cantidad sin redondear.</small> </p>
     {% endif %}
 {% endblock %}
