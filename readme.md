@@ -15,7 +15,7 @@ Con este programa podremos simular inversiones con diversas criptomonedas y visu
 ```
 cripto.sqlite
 ```
-Cuando hayamos completado estos pasos procederemos a abrir un nuevo terminal en la pestaña "Terminal" de Visual Studio Code y seleccionando "Nuevo Terminal" y continuamos con la instalación.
+Cuando hayamos completado estos pasos procederemos a abrir un nuevo terminal en la pestaña "Terminal" de Visual Studio Code, seleccionaremos "Nuevo Terminal" y continuamos con la instalación.
 
 # Instalación
 
